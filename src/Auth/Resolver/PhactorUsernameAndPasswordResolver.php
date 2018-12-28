@@ -7,7 +7,6 @@ use ConferenceTools\Authentication\Auth\Credential\UsernameAndPassword;
 use ConferenceTools\Authentication\Auth\Exception\CantAuthenticate;
 use ConferenceTools\Authentication\Auth\Exception\CantResolve;
 use ConferenceTools\Authentication\Domain\User\ReadModel\User;
-use Doctrine\Common\Collections\Criteria;
 use Phactor\ReadModel\Repository;
 
 class PhactorUsernameAndPasswordResolver implements UsernameAndPasswordResolver
@@ -21,7 +20,7 @@ class PhactorUsernameAndPasswordResolver implements UsernameAndPasswordResolver
 
     public function resolve(UsernameAndPassword $credentials)
     {
-        $user = $this->repository->matching(Criteria::create()->where(Criteria::expr()->eq('username', $credentials->getUsername())))->current();
+        $user = $this->repository->get($credentials->getUsername());
 
         if (!($user instanceof User)) {
             throw new CantResolve();

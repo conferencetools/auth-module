@@ -13,12 +13,10 @@ use Phactor\ReadModel\Repository;
 class Projector implements Handler
 {
     private $repository;
-    private $generator;
 
-    public function __construct(Repository $repository, Generator $generator)
+    public function __construct(Repository $repository)
     {
         $this->repository = $repository;
-        $this->generator = $generator;
     }
 
     public function handle(DomainMessage $message)
@@ -35,7 +33,7 @@ class Projector implements Handler
 
     private function createNewUser(CreateNewUser $event): void
     {
-        $user = new User('id', $event->getUsername(), $event->getPassword());
+        $user = new User($event->getUsername(), $event->getPassword());
         $this->repository->add($user);
     }
 }

@@ -15,6 +15,6 @@ class UserProjectorFactory implements FactoryInterface
     {
         $repositoryManager = $container->get(RepositoryManager::class);
         $repository = $repositoryManager->get(User::class);
-        return new Projector($repository, $container->get(Generator::class));
+        return new Projector($repository);
     }
 }

@@ -13,10 +13,6 @@ class User
     /**
      * @ORM\Id @ORM\Column(type="string")
      */
-    private $id;
-    /**
-     * @ORM\Column(type="string")
-     */
     private $username;
 
     /**
@@ -24,19 +20,13 @@ class User
      */
     private $password;
 
-    public function __construct(string $id, string $username, HashedPassword $password)
+    public function __construct(string $username, HashedPassword $password)
     {
-        $this->id = $id;
         $this->username = $username;
         $this->password = $password->getHash();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
