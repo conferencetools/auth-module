@@ -12,15 +12,14 @@ use ConferenceTools\Authentication\Auth\Resolver\PhactorIdentityResolver;
 use ConferenceTools\Authentication\Auth\Resolver\PhactorUsernameAndPasswordResolver;
 use ConferenceTools\Authentication\Domain\User\ReadModel\User;
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\Paseto\Builder;
 use ParagonIE\Paseto\Keys\SymmetricKey;
 use ParagonIE\Paseto\Parser;
+use ParagonIE\Paseto\Protocol\Version1;
+use ParagonIE\Paseto\Protocol\Version2;
 use ParagonIE\Paseto\Rules\NotExpired;
 use Phactor\Zend\RepositoryManager;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 class Factory implements FactoryInterface
@@ -37,10 +36,23 @@ class Factory implements FactoryInterface
 
         $config = $container->get('Config');
 
-        $parser = Parser::getLocal(new SymmetricKey(Base64::decode($config['auth']['signingKey'])));
+        $version = $config['auth']['version'] ?? 2;
+
+        switch ($version) {
+            case 1:
+                $protocol = new Version1();
+                break;
+            case 2:
+            default:
+                $protocol = new Version2();
+        }
+
+        $symmetricKey = new SymmetricKey(Base64::decode($config['auth']['signingKey']), $protocol);
+
+        $parser = Parser::getLocal($symmetricKey);
         $parser->addRule(new NotExpired());
 
-        $builder = Builder::getLocal(new SymmetricKey(Base64::decode($config['auth']['signingKey'])));
+        $builder = Builder::getLocal($symmetricKey, $protocol);
 
         $persistor = new PasetoCookie($parser, $builder, $config['auth']['loginTimeout'], $config['auth']['cookieOptions']);
         $identity = new IdentityAuthenticator(
