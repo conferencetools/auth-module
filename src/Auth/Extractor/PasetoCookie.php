@@ -66,7 +66,7 @@ class PasetoCookie implements IdentityExtractor, Persistor
 
         $cookie = new SetCookie(
             self::COOKIE_NAME,
-            (string) $token,
+            $token->toString(),
             $expiry,
             $this->cookieOptions['path'], //path
             $this->cookieOptions['domain'], // domain
