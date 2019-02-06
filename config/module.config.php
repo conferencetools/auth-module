@@ -15,6 +15,7 @@ return [
         ],
     ],
     'doctrine' => require __DIR__ . '/doctrine.config.php',
+    'navigation' => require __DIR__ . '/navigation.config.php',
     'message_handlers' => require __DIR__ . '/message_handlers.config.php',
     'message_subscription_providers' => [\ConferenceTools\Authentication\Domain\MessageSubscriptions::class],
     'router' => [

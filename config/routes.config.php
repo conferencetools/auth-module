@@ -18,6 +18,30 @@ return [
                     ]
                 ],
                 'may_terminate' => true,
+            ],
+            'users' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => 'users',
+                    'defaults' => [
+                        'requiresAuth' => true,
+                        'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
+                        'controller' => Controller\UserController::class,
+                        'action' => 'index',
+                    ]
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'new' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/new',
+                            'defaults' => [
+                                'action' => 'add-user',
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ]
     ]
