@@ -2,16 +2,16 @@
 
 namespace ConferenceTools\Authentication\Controller;
 
-use ConferenceTools\Authentication\Auth\AuthService;
 use ConferenceTools\Authentication\Auth\Exception\AuthenticationFailed;
 use ConferenceTools\Authentication\Form\LoginForm;
 use Zend\Http\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 /**
  * @method identity()
  */
-class AuthController extends \Zend\Mvc\Controller\AbstractActionController
+class AuthController extends AbstractActionController
 {
     public function authAction()
     {
