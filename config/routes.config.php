@@ -22,7 +22,7 @@ return [
             'users' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => 'users',
+                    'route' => '/users',
                     'defaults' => [
                         'requiresAuth' => true,
                         'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
@@ -40,7 +40,16 @@ return [
                                 'action' => 'add-user',
                             ]
                         ]
-                    ]
+                    ],
+                    'change-password' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/change-password',
+                            'defaults' => [
+                                'action' => 'change-password',
+                            ]
+                        ]
+                    ],
                 ]
             ]
         ]

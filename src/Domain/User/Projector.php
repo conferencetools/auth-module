@@ -3,6 +3,7 @@
 
 namespace ConferenceTools\Authentication\Domain\User;
 
+use ConferenceTools\Authentication\Domain\User\Command\ChangeUserPassword;
 use ConferenceTools\Authentication\Domain\User\Command\CreateNewUser;
 use ConferenceTools\Authentication\Domain\User\ReadModel\User;
 use Phactor\Identity\Generator;
@@ -26,6 +27,9 @@ class Projector implements Handler
             case $event instanceof CreateNewUser:
                 $this->createNewUser($event);
                 break;
+            case $event instanceof ChangeUserPassword:
+                $this->changePassword($event);
+                break;
         }
 
         $this->repository->commit();
@@ -35,5 +39,13 @@ class Projector implements Handler
     {
         $user = new User($event->getUsername(), $event->getPassword());
         $this->repository->add($user);
+    }
+
+    private function changePassword(ChangeUserPassword $event)
+    {
+        $user = $this->repository->get($event->getUsername());
+        if ($user instanceof User) {
+            $user->changePassword($event->getPassword());
+        }
     }
 }

@@ -9,7 +9,17 @@ return [
                     'label' => 'Add user',
                     'route' => 'authentication/users/new',
                 ]
-            ]
+            ],
         ],
+        [
+            'label' => 'Account',
+            'route' => 'attendance-admin',
+            'pages' => [
+                [
+                    'label' => 'Change password',
+                    'route' => 'authentication/users/change-password',
+                ]
+            ],
+        ]
     ],
 ];

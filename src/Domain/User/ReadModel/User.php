@@ -10,15 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
-    /**
-     * @ORM\Id @ORM\Column(type="string")
-     */
+    /** @ORM\Id @ORM\Column(type="string") */
     private $username;
-
-    /**
-     * @ORM\Column(type="string")
-     */
+    /** @ORM\Column(type="string") */
     private $password;
+    /** @ORM\Column(type="boolean", options={"default" : true}) */
+    private $forcePasswordChange = true;
 
     public function __construct(string $username, HashedPassword $password)
     {
@@ -43,4 +40,14 @@ class User
         return $result;
     }
 
+    public function changePassword(HashedPassword $password): void
+    {
+        $this->password = $password->getHash();
+        $this->forcePasswordChange = false;
+    }
+
+    public function mustChangePassword(): bool
+    {
+        return $this->forcePasswordChange;
+    }
 }

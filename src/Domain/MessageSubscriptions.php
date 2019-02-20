@@ -13,6 +13,9 @@ class MessageSubscriptions
             User\Command\CreateNewUser::class => [
                 Projector::class,
             ],
+            User\Command\ChangeUserPassword::class => [
+                Projector::class,
+            ],
         ];
     }
 }
