@@ -3,8 +3,11 @@
 namespace ConferenceTools\Authentication;
 
 use ConferenceTools\Authentication\Auth\AuthService;
+use ConferenceTools\Authentication\Listener\NavigationPermissionsListener;
+use ConferenceTools\Authentication\Listener\PermissionsListener;
 use ConferenceTools\Authentication\Listener\PersistAuthListener;
 use ConferenceTools\Authentication\Listener\RequiresAuthListener;
+use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 
 class Module
@@ -20,6 +23,19 @@ class Module
 
         $persistAuthListener = new PersistAuthListener($authService);
         $persistAuthListener->attach($eventManager);
+
+        $permissionsListener = new PermissionsListener($authService);
+        $permissionsListener->attach($eventManager);
+
+        $request = $event->getRequest();
+        if ($request instanceof Request) {
+            $navPermissionsListener = new NavigationPermissionsListener($authService, $request);
+            $eventManager->getSharedManager()->attach(
+                \Zend\View\Helper\Navigation\AbstractHelper::class,
+                'isAllowed',
+                [$navPermissionsListener, 'checkPermission']
+            );
+        }
     }
 
     public function getConfig()

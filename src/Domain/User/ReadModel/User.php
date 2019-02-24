@@ -16,6 +16,8 @@ class User
     private $password;
     /** @ORM\Column(type="boolean", options={"default" : true}) */
     private $forcePasswordChange = true;
+    /** @ORM\Column(type="json_array", nullable=true) */
+    private $permissions;
 
     public function __construct(string $username, HashedPassword $password)
     {
@@ -49,5 +51,15 @@ class User
     public function mustChangePassword(): bool
     {
         return $this->forcePasswordChange;
+    }
+
+    public function isGranted($permission)
+    {
+        return in_array($permission, $this->permissions);
+    }
+
+    public function setPermissions(array $permissions)
+    {
+        $this->permissions = $permissions;
     }
 }

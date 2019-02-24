@@ -7,6 +7,9 @@ return [
         'cookieOptions' => [
             'secure' => false
         ],
+        'permissions' => [
+            'user-management' => 'User Management'
+        ]
     ],
     'controllers' => require __DIR__ . '/controllers.config.php',
     'controller_plugins' => [
@@ -32,4 +35,6 @@ return [
         ],
         'template_map' => require __DIR__ . '/views.config.php',
     ],
+
+
 ];

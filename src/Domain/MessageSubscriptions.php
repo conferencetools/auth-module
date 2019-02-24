@@ -16,6 +16,9 @@ class MessageSubscriptions
             User\Command\ChangeUserPassword::class => [
                 Projector::class,
             ],
+            User\Command\ChangeUserPermissions::class => [
+                Projector::class,
+            ],
         ];
     }
 }

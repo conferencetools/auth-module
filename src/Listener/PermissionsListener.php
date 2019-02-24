@@ -13,10 +13,8 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 
-class RequiresAuthListener implements ListenerAggregateInterface
+class PermissionsListener implements ListenerAggregateInterface
 {
-    const LOGIN_ROUTE = 'authentication/login';
-    const CHANGE_PASSWORD_ROUTE = 'authentication/account/change-password';
     private $authService;
 
     public function __construct(AuthService $authService)
@@ -28,7 +26,7 @@ class RequiresAuthListener implements ListenerAggregateInterface
     {
         $events->attach(
             MvcEvent::EVENT_ROUTE,
-            [$this, 'checkAuth'],
+            [$this, 'checkPermissions'],
             $priority
         );
     }
@@ -38,10 +36,11 @@ class RequiresAuthListener implements ListenerAggregateInterface
         throw new \Exception('Nope, you\'re stuck with me');
     }
 
-    public function checkAuth(MvcEvent $event)
+    public function checkPermissions(MvcEvent $event)
     {
         $routeMatch = $event->getRouteMatch();
-        if ($routeMatch->getParam('requiresAuth', false)) {
+        $permission = $routeMatch->getParam('requiresPermission', false);
+        if ($permission) {
             $request = $event->getRequest();
             if (!($request instanceof Request)) {
                 return; //or throw?
@@ -50,14 +49,19 @@ class RequiresAuthListener implements ListenerAggregateInterface
             $identity = $this->authService->getIdentity($request);
 
             if ($identity === null) {
-                return $this->prepareRedirect($event, self::LOGIN_ROUTE);
+                return $this->prepareRedirect($event, RequiresAuthListener::LOGIN_ROUTE);
             }
 
             /** @var User $user */
             $user = $identity->getIdentityData();
+            if (!($user->isGranted($permission))) {
+                $response = $event->getResponse() ?: new Response();
+                $response->setStatusCode(403);
 
-            if ($user->mustChangePassword() && $routeMatch->getMatchedRouteName() !== self::CHANGE_PASSWORD_ROUTE) {
-                return $this->prepareRedirect($event, self::CHANGE_PASSWORD_ROUTE);
+                $event->setResponse($response);
+                $event->setResult($response);
+                $event->stopPropagation(true);
+                return $response;
             }
         }
     }

@@ -4,6 +4,7 @@ return [
         [
             'label' => 'Users',
             'route' => 'authentication/users',
+            'permission' => 'user-management',
             'pages' => [
                 [
                     'label' => 'Add user',
@@ -17,7 +18,7 @@ return [
             'pages' => [
                 [
                     'label' => 'Change password',
-                    'route' => 'authentication/users/change-password',
+                    'route' => 'authentication/account/change-password',
                 ]
             ],
         ]

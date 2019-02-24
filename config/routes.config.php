@@ -25,6 +25,7 @@ return [
                     'route' => '/users',
                     'defaults' => [
                         'requiresAuth' => true,
+                        'requiresPermission' => 'user-management',
                         'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
                         'controller' => Controller\UserController::class,
                         'action' => 'index',
@@ -41,6 +42,30 @@ return [
                             ]
                         ]
                     ],
+                    'permissions' => [
+                        'type' => \Zend\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/:user/permissions',
+                            'defaults' => [
+                                'action' => 'update-permissions',
+                            ]
+                        ]
+                    ],
+                ]
+            ],
+            'account' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/account',
+                    'defaults' => [
+                        'requiresAuth' => true,
+                        'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
+                        'controller' => Controller\UserController::class,
+                        'action' => 'index',
+                    ]
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
                     'change-password' => [
                         'type' => Literal::class,
                         'options' => [
@@ -50,8 +75,8 @@ return [
                             ]
                         ]
                     ],
-                ]
-            ]
+                ],
+            ],
         ]
     ]
 ];

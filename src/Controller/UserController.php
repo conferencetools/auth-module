@@ -4,11 +4,13 @@ namespace ConferenceTools\Authentication\Controller;
 
 use ConferenceTools\Authentication\Auth\Identity;
 use ConferenceTools\Authentication\Domain\User\Command\ChangeUserPassword;
+use ConferenceTools\Authentication\Domain\User\Command\ChangeUserPermissions;
 use ConferenceTools\Authentication\Domain\User\Command\CreateNewUser;
 use ConferenceTools\Authentication\Domain\User\HashedPassword;
 use ConferenceTools\Authentication\Domain\User\ReadModel\User;
 use ConferenceTools\Authentication\Form\ChangePasswordForm;
 use ConferenceTools\Authentication\Form\NewUserForm;
+use ConferenceTools\Authentication\Form\UserPrivilegesForm;
 use Doctrine\Common\Collections\Criteria;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\AbstractPluginManager;
@@ -28,10 +30,13 @@ class UserController extends AbstractActionController
 {
     /** @var AbstractPluginManager  */
     private $formElementManager;
+    /** @var array */
+    private $permissions;
 
-    public function __construct(PluginManagerInterface $formElementManager)
+    public function __construct(PluginManagerInterface $formElementManager, array $permissions)
     {
         $this->formElementManager = $formElementManager;
+        $this->permissions = $permissions;
     }
 
     public function indexAction()
@@ -60,7 +65,31 @@ class UserController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form]);
+        return new ViewModel(['form' => $form, 'blockHeader' => 'Add user']);
+    }
+
+    public function updatePermissionsAction()
+    {
+        $form = $this->formElementManager->get(UserPrivilegesForm::class, ['permissions' => $this->permissions]);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $user = $this->params()->fromRoute('user');
+                $command = new ChangeUserPermissions(
+                    $user,
+                    (array) $data['permissions']
+                );
+
+                $this->messageBus()->fire($command);
+
+                $this->flashMessenger()->addSuccessMessage('User permissions updated');
+                $this->redirect()->toRoute('authentication/users');
+            }
+        }
+
+        return new ViewModel(['form' => $form, 'blockHeader' => 'Change user permissions']);
     }
 
     public function changePasswordAction()
