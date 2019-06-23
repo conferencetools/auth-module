@@ -31,7 +31,6 @@ class LoginForm extends Form
             ],
         ]);
 
-        $this->add(new Csrf('security'));
         $this->add(new Submit('create', ['label' => 'Login']));
     }
 }

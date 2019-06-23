@@ -2,7 +2,6 @@
 
 namespace ConferenceTools\Authentication\Form;
 
-use Zend\Form\Element\Csrf;
 use Zend\Form\Element\MultiCheckbox;
 use Zend\Form\Element\Submit;
 use Zend\Form\Form;
@@ -21,8 +20,16 @@ class UserPrivilegesForm extends Form implements InputFilterProviderInterface
             ],
         ]);
 
-        $this->add(new Csrf('security'));
-        $this->add(new Submit('update', ['label' => 'Update']));
+        $this->add([
+            'type' => Submit::class,
+            'name' => 'update',
+            'options' => [
+                'label' => 'Update',
+            ],
+            'attributes' => [
+                'class'=> 'btn-primary',
+            ]
+        ]);
     }
 
     public function getInputFilterSpecification()

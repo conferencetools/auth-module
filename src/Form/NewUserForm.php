@@ -31,7 +31,15 @@ class NewUserForm extends Form
             ],
         ]);
 
-        $this->add(new Csrf('security'));
-        $this->add(new Submit('create', ['label' => 'Create']));
+        $this->add([
+            'type' => Submit::class,
+            'name' => 'create',
+            'options' => [
+                'label' => 'Create',
+            ],
+            'attributes' => [
+                'class'=> 'btn-primary',
+            ]
+        ]);
     }
 }

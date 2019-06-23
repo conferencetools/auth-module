@@ -34,7 +34,6 @@ class ChangePasswordForm extends Form implements InputFilterProviderInterface
             ],
         ]);
 
-        $this->add(new Csrf('security'));
         $this->add(new Submit('create', ['label' => 'Create']));
     }
 
