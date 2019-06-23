@@ -1,3 +1,5 @@
-# auth-module
+# Authentication module
 
-Provides authentication for conference tools apps; currently only works with attendance module due to some interdependencies which need to be refactored out
+Provides authentication, permissions and user management for conference tools apps.
+
+ 

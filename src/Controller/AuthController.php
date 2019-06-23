@@ -5,13 +5,9 @@ namespace ConferenceTools\Authentication\Controller;
 use ConferenceTools\Authentication\Auth\Exception\AuthenticationFailed;
 use ConferenceTools\Authentication\Form\LoginForm;
 use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-/**
- * @method identity()
- */
-class AuthController extends AbstractActionController
+class AuthController extends AppController
 {
     public function authAction()
     {
@@ -24,8 +20,7 @@ class AuthController extends AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 try {
-                    $this->identity();
-                    return $this->redirect()->toRoute('attendance-admin');
+                    return $this->userRedirect($this->identity()->getIdentityData());
                 } catch (AuthenticationFailed $e) {
                     $this->flashMessenger()->addErrorMessage('The login details you provided were incorrect');
                 }

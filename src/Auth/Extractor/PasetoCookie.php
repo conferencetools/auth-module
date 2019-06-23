@@ -64,7 +64,7 @@ class PasetoCookie implements IdentityExtractor, Persistor
         $token = (new JsonToken())->withExpiration($expiry)->with(self::CLAIM_NAME, $identity);
         $token = $this->builder->withJsonToken($token);
 
-        $cookie = new SetCookie(
+        $cookie = new class(
             self::COOKIE_NAME,
             $token->toString(),
             $expiry,
@@ -72,7 +72,12 @@ class PasetoCookie implements IdentityExtractor, Persistor
             $this->cookieOptions['domain'], // domain
             $this->cookieOptions['secure'], //secure
             true // httponly
-        );
+        ) extends SetCookie {
+            public function getFieldValue()
+            {
+                return parent::getFieldValue() . '; SameSite=lax';
+            }
+        };
 
         $response->getHeaders()->addHeader($cookie);
     }

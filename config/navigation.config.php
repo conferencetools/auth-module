@@ -14,7 +14,7 @@ return [
         ],
         [
             'label' => 'Account',
-            'route' => 'attendance-admin',
+            'uri' => '#',
             'pages' => [
                 [
                     'label' => 'Change password',

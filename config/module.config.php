@@ -9,12 +9,16 @@ return [
         ],
         'permissions' => [
             'user-management' => 'User Management'
+        ],
+        'redirects' => [
+            'byPermission' => []
         ]
     ],
     'controllers' => require __DIR__ . '/controllers.config.php',
     'controller_plugins' => [
         'factories' => [
             'identity' => \ConferenceTools\Authentication\Mvc\Controller\Plugin\IdentityFactory::class,
+            'userRedirect' => \ConferenceTools\Authentication\Mvc\Controller\Plugin\UserRedirectFactory::class,
         ],
     ],
     'doctrine' => require __DIR__ . '/doctrine.config.php',

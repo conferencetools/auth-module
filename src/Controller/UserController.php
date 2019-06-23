@@ -2,7 +2,6 @@
 
 namespace ConferenceTools\Authentication\Controller;
 
-use ConferenceTools\Authentication\Auth\Identity;
 use ConferenceTools\Authentication\Domain\User\Command\ChangeUserPassword;
 use ConferenceTools\Authentication\Domain\User\Command\ChangeUserPermissions;
 use ConferenceTools\Authentication\Domain\User\Command\CreateNewUser;
@@ -12,30 +11,15 @@ use ConferenceTools\Authentication\Form\ChangePasswordForm;
 use ConferenceTools\Authentication\Form\NewUserForm;
 use ConferenceTools\Authentication\Form\UserPrivilegesForm;
 use Doctrine\Common\Collections\Criteria;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\PluginManagerInterface;
 use Zend\View\Model\ViewModel;
-use Phactor\ReadModel\Repository;
-use Phactor\Zend\ControllerPlugin\MessageBus;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
-/**
- * @method MessageBus messageBus()
- * @method Repository repository(string $className)
- * @method FlashMessenger flashMessenger()
- * @method Identity identity()
- */
-class UserController extends AbstractActionController
+class UserController extends AppController
 {
-    /** @var AbstractPluginManager  */
-    private $formElementManager;
     /** @var array */
     private $permissions;
 
-    public function __construct(PluginManagerInterface $formElementManager, array $permissions)
+    public function __construct(array $permissions)
     {
-        $this->formElementManager = $formElementManager;
         $this->permissions = $permissions;
     }
 
@@ -47,7 +31,7 @@ class UserController extends AbstractActionController
 
     public function addUserAction()
     {
-        $form = $this->formElementManager->get(NewUserForm::class);
+        $form = $this->form(NewUserForm::class);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -70,7 +54,7 @@ class UserController extends AbstractActionController
 
     public function updatePermissionsAction()
     {
-        $form = $this->formElementManager->get(UserPrivilegesForm::class, ['permissions' => $this->permissions]);
+        $form = $this->form(UserPrivilegesForm::class, ['permissions' => $this->permissions]);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -94,7 +78,7 @@ class UserController extends AbstractActionController
 
     public function changePasswordAction()
     {
-        $form = $this->formElementManager->get(ChangePasswordForm::class);
+        $form = $this->form(ChangePasswordForm::class);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -108,7 +92,7 @@ class UserController extends AbstractActionController
                 $this->messageBus()->fire($command);
 
                 $this->flashMessenger()->addSuccessMessage('Password changed');
-                $this->redirect()->toRoute('attendance-admin');
+                return $this->userRedirect($this->identity()->getIdentityData());
             }
         }
 

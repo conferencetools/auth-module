@@ -26,7 +26,7 @@ return [
                     'defaults' => [
                         'requiresAuth' => true,
                         'requiresPermission' => 'user-management',
-                        'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
+                        'layout' => 'admin/layout', // @TODO this is a dependency in another module.
                         'controller' => Controller\UserController::class,
                         'action' => 'index',
                     ]
@@ -59,7 +59,6 @@ return [
                     'route' => '/account',
                     'defaults' => [
                         'requiresAuth' => true,
-                        'layout' => 'attendance/admin-layout', // @TODO this is a dependency in another module.
                         'controller' => Controller\UserController::class,
                         'action' => 'index',
                     ]

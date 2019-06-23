@@ -15,7 +15,8 @@
     "zendframework/zend-math": "^3.0",
     "ext-json": "*",
     "zendframework/zend-mail": "^2.10@dev",
-    "paragonie/paseto": "^1.0.0"
+    "paragonie/paseto": "^1.0.0",
+    "conferencetools/admin": "dev-master"
   },
   "autoload": {
     "psr-4": {
