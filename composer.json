@@ -16,7 +16,7 @@
     "ext-json": "*",
     "zendframework/zend-mail": "^2.10@dev",
     "paragonie/paseto": "^1.0.0",
-    "conferencetools/admin": "dev-master"
+    "conferencetools/admin-module": "dev-master"
   },
   "autoload": {
     "psr-4": {
