@@ -54,15 +54,21 @@ class UserController extends AppController
 
     public function updatePermissionsAction()
     {
+        $userId = $this->params()->fromRoute('user');
+        /** @var User $user */
+        $user = $this->repository(User::class)->get($userId);
         $form = $this->form(UserPrivilegesForm::class, ['permissions' => $this->permissions]);
+        $form->setData([
+            'permissions' => $user->getPermissions(),
+        ]);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $user = $this->params()->fromRoute('user');
+
                 $command = new ChangeUserPermissions(
-                    $user,
+                    $userId,
                     (array) $data['permissions']
                 );
 

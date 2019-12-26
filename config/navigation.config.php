@@ -14,7 +14,7 @@ return [
         ],
         [
             'label' => 'Account',
-            'uri' => '#',
+            'uri' => '',
             'pages' => [
                 [
                     'label' => 'Change password',

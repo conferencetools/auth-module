@@ -62,4 +62,9 @@ class User
     {
         $this->permissions = $permissions;
     }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
 }
